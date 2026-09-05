@@ -1,0 +1,12 @@
+@theme {
+  --color-brand-primary: #1976d2;
+  --color-brand-secondary: #9c27b0;
+  --color-brand-success: #4caf50;
+  --color-brand-warning: #ff9800;
+  --color-brand-danger: #f44336;
+  --color-brand-info: #2196f3;
+  --color-surface-light: #fafafa;
+  --color-surface-dark: #121212;
+  --font-family-sans: 'Inter', 'Roboto', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+}

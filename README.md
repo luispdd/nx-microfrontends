@@ -2,101 +2,182 @@
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+An **Angular microfrontend showcase monorepo** built with [Nx](https://nx.dev) and [Native Federation](https://github.com/angular-architects/module-federation-plugin/blob/main/libs/native-federation/README.md). It demonstrates how to compose multiple independently deployed Angular applications using Module Federation, with each remote MFE showcasing the same set of UI components implemented with a different component library.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Architecture
 
-## Run tasks
+The workspace follows a **shell + remotes** microfrontend pattern:
 
-To run the dev server for your app, use:
+```
+nx-microfrontends/
+├── apps/
+│   ├── shell/           # Host application (port 4200) — orchestrates the remotes
+│   ├── mfe-material/    # Remote MFE (port 4201) — Angular Material components
+│   ├── mfe-primeng/     # Remote MFE (port 4202) — PrimeNG components
+│   └── mfe-native/      # Remote MFE (port 4203) — Native Angular / vanilla components
+└── libs/
+    └── shared/          # Shared models, styles, UI utilities, and performance helpers
+```
+
+### Applications
+
+| App | Port | Description |
+|-----|------|-------------|
+| `shell` | 4200 | Host application that dynamically loads remotes via Native Federation |
+| `mfe-material` | 4201 | Component showcase built with **Angular Material** |
+| `mfe-primeng` | 4202 | Component showcase built with **PrimeNG** |
+| `mfe-native` | 4203 | Component showcase built with **native Angular** (no third-party UI library) |
+
+### Showcased Components
+
+Each remote MFE implements a parity set of UI components, including:
+
+- Badge, Card, Checkbox, Datepicker, Dialog/Modal
+- Divider, Dropdown/Select, Input/Text-Input
+- Menu, Pagination, Progress Bar & Spinner
+- Radio Button, Range Slider, Stepper, Tabs
+- Table, Toggle Switch, Toolbar, Tooltip, Accordion
+
+### Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Monorepo tooling | [Nx](https://nx.dev) 23 |
+| Framework | [Angular](https://angular.dev) 22 |
+| Microfrontend federation | [@angular-architects/native-federation](https://github.com/angular-architects/module-federation-plugin) |
+| UI library A | [Angular Material](https://material.angular.io) |
+| UI library B | [PrimeNG](https://primeng.org) |
+| Styling | [Tailwind CSS](https://tailwindcss.com) v4 + SCSS |
+| Unit tests | [Vitest](https://vitest.dev) (via `@analogjs/vitest-angular`) |
+| E2E tests | [Playwright](https://playwright.dev) |
+| Package manager | [Bun](https://bun.sh) |
+
+---
+
+## Prerequisites
+
+- **Node.js** ≥ 20
+- **Bun** ≥ 1.0 — used as the package manager ([install](https://bun.sh/docs/installation))
+- **Nx CLI** (optional but recommended): `npm install -g nx`
+
+---
+
+## Installation
+
+Clone the repository and install dependencies:
 
 ```sh
+git clone https://github.com/<your-org>/nx-microfrontends.git
+cd nx-microfrontends
+bun install
+```
+
+---
+
+## Running the Applications
+
+### Run everything at once (recommended)
+
+Start all apps in parallel so the shell can load the remotes:
+
+```sh
+npx nx run-many --target=serve --all --parallel
+```
+
+Then open **http://localhost:4200** in your browser.
+
+### Run apps individually
+
+```sh
+# Shell (host)
 npx nx serve shell
+
+# Angular Material MFE
+npx nx serve mfe-material
+
+# PrimeNG MFE
+npx nx serve mfe-primeng
+
+# Native Angular MFE
+npx nx serve mfe-native
 ```
 
-To create a production bundle:
+> **Note:** Each remote must be running for the shell to successfully load it via federation.
+
+---
+
+## Building for Production
 
 ```sh
+# Build a single app
 npx nx build shell
+
+# Build all apps
+npx nx run-many --target=build --all
 ```
 
-To see all available targets to run for a project, run:
+Build artifacts are output to `dist/apps/<app-name>/`.
+
+---
+
+## Testing
+
+### Unit tests
 
 ```sh
+# Run tests for all projects
+npx nx run-many --target=test --all
+
+# Run tests for a specific project
+npx nx test mfe-material
+```
+
+### E2E tests
+
+```sh
+npx nx e2e shell-e2e
+```
+
+---
+
+## Linting
+
+```sh
+# Lint all projects
+npx nx run-many --target=lint --all
+
+# Lint a specific project
+npx nx lint mfe-material
+```
+
+---
+
+## Other Useful Commands
+
+```sh
+# Visualize the project graph
+npx nx graph
+
+# Show all available targets for a project
 npx nx show project shell
+
+# Generate a new Angular app
+npx nx g @nx/angular:app my-new-app
+
+# Generate a new shared library
+npx nx g @nx/angular:lib libs/shared/my-lib
+
+# Generate the PrimeNG theme
+bun run build:theme
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+---
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Useful Links
 
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Nx Angular Monorepo Tutorial](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial)
+- [Native Federation Docs](https://github.com/angular-architects/module-federation-plugin/blob/main/libs/native-federation/README.md)
+- [Angular Material](https://material.angular.io)
+- [PrimeNG](https://primeng.org)
+- [Nx on CI](https://nx.dev/ci/intro/ci-with-nx)
+- [Nx Discord Community](https://go.nx.dev/community)

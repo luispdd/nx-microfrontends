@@ -1,0 +1,8 @@
+{
+  "mfe-material": "http://localhost:4201/remoteEntry.json",
+  "mfe-primeng": "http://localhost:4202/remoteEntry.json",
+  "mfe-native": "http://localhost:4203/remoteEntry.json",
+  "mfeMaterial": "http://localhost:4201/remoteEntry.json",
+  "mfePrimeng": "http://localhost:4202/remoteEntry.json",
+  "mfeNative": "http://localhost:4203/remoteEntry.json"
+}

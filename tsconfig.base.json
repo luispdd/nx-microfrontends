@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": false,
-    "paths": {}
+    "paths": {
+      "@nx-microfrontends/shared-models": ["./libs/shared/models/src/index.ts"],
+      "@nx-microfrontends/shared-ui": ["./libs/shared/ui/src/index.ts"],
+      "@nx-microfrontends/shared-perf": ["./libs/shared/perf/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

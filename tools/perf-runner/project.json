@@ -1,0 +1,48 @@
+{
+  "name": "perf-runner",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "tags": ["scope:tools"],
+  "targets": {
+    "lighthouse": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bunx lhci autorun --config=tools/perf-runner/lighthouserc.js",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "benchmark": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bunx playwright test --config=tools/perf-runner/playwright.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "bundle-analysis": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash tools/perf-runner/analyze.sh",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "restart": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bun tools/perf-runner/restart-mfe.ts",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "perf": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "bunx nx run perf-runner:lighthouse",
+          "bunx nx run perf-runner:benchmark",
+          "bunx nx run perf-runner:bundle-analysis"
+        ],
+        "parallel": false,
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

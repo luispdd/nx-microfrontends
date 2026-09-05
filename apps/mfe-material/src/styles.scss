@@ -1,0 +1,51 @@
+@use '@angular/material' as mat;
+@import 'tailwindcss';
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto, sans-serif',
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+html, body {
+  color-scheme: dark;
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+:root, :host, html {
+  @include mat.all-component-themes($theme);
+}
+
+/* Material & CDK Overlays */
+.cdk-overlay-pane {
+  --mat-autocomplete-background-color: #1e293b;
+  --mat-select-panel-background-color: #1e293b;
+  --mat-menu-container-color: #1e293b;
+}
+
+.mat-mdc-autocomplete-panel,
+.mat-mdc-select-panel,
+.mat-mdc-menu-panel,
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mat-mdc-option {
+  color: #f8fafc !important;
+  &:hover, &:focus, &.mdc-list-item--activated {
+    background-color: #334155 !important;
+  }
+}

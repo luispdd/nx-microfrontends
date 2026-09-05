@@ -1,0 +1,124 @@
+{
+  "name": "mfe-native",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/mfe-native/src",
+  "tags": [
+    "scope:mfe-native",
+    "type:app"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "cacheExternalArtifacts": true,
+        "tsConfig": "apps/mfe-native/tsconfig.federation.json"
+      },
+      "configurations": {
+        "production": {
+          "target": "mfe-native:esbuild:production"
+        },
+        "development": {
+          "target": "mfe-native:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "mfe-native:serve-original:development",
+        "tsConfig": "apps/mfe-native/tsconfig.federation.json",
+        "rebuildDelay": 500,
+        "cacheExternalArtifacts": true,
+        "dev": true,
+        "devServer": true,
+        "port": 0
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "watch": false
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "mfe-native:build",
+        "port": 4203,
+        "staticFilePath": "dist/apps/mfe-native/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/mfe-native",
+        "browser": "apps/mfe-native/src/main.ts",
+        "tsConfig": "apps/mfe-native/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/mfe-native/public"
+          }
+        ],
+        "styles": [
+          "apps/mfe-native/src/styles.scss"
+        ],
+        "polyfills": [
+          "es-module-shims"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      }
+    },
+    "serve-original": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4203
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "mfe-native:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "mfe-native:esbuild:development"
+        }
+      }
+    }
+  }
+}
