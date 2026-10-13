@@ -58,7 +58,7 @@ Each remote MFE implements a parity set of UI components, including:
 
 - **Node.js** ≥ 20
 - **Bun** ≥ 1.0 — used as the package manager ([install](https://bun.sh/docs/installation))
-- **Nx CLI** (optional but recommended): `npm install -g nx`
+- **Nx CLI** (optional): `bun add -g nx`
 
 ---
 
@@ -72,6 +72,8 @@ cd nx-microfrontends
 bun install
 ```
 
+> **Tip:** You can use `bunx nx <command>` or simply `bun nx <command>` once dependencies are installed.
+
 ---
 
 ## Running the Applications
@@ -81,7 +83,9 @@ bun install
 Start all apps in parallel so the shell can load the remotes:
 
 ```sh
-npx nx run-many --target=serve --all --parallel
+bun run dev
+# or
+bunx nx run-many --target=serve --all --parallel=4
 ```
 
 Then open **http://localhost:4200** in your browser.
@@ -90,16 +94,16 @@ Then open **http://localhost:4200** in your browser.
 
 ```sh
 # Shell (host)
-npx nx serve shell
+bunx nx serve shell
 
 # Angular Material MFE
-npx nx serve mfe-material
+bunx nx serve mfe-material
 
 # PrimeNG MFE
-npx nx serve mfe-primeng
+bunx nx serve mfe-primeng
 
 # Native Angular MFE
-npx nx serve mfe-native
+bunx nx serve mfe-native
 ```
 
 > **Note:** Each remote must be running for the shell to successfully load it via federation.
@@ -110,10 +114,10 @@ npx nx serve mfe-native
 
 ```sh
 # Build a single app
-npx nx build shell
+bunx nx build shell
 
 # Build all apps
-npx nx run-many --target=build --all
+bunx nx run-many --target=build --all
 ```
 
 Build artifacts are output to `dist/apps/<app-name>/`.
@@ -126,16 +130,16 @@ Build artifacts are output to `dist/apps/<app-name>/`.
 
 ```sh
 # Run tests for all projects
-npx nx run-many --target=test --all
+bunx nx run-many --target=test --all
 
 # Run tests for a specific project
-npx nx test mfe-material
+bunx nx test mfe-material
 ```
 
 ### E2E tests
 
 ```sh
-npx nx e2e shell-e2e
+bunx nx e2e shell-e2e
 ```
 
 ---
@@ -144,10 +148,10 @@ npx nx e2e shell-e2e
 
 ```sh
 # Lint all projects
-npx nx run-many --target=lint --all
+bunx nx run-many --target=lint --all
 
 # Lint a specific project
-npx nx lint mfe-material
+bunx nx lint mfe-material
 ```
 
 ---
@@ -156,16 +160,16 @@ npx nx lint mfe-material
 
 ```sh
 # Visualize the project graph
-npx nx graph
+bunx nx graph
 
 # Show all available targets for a project
-npx nx show project shell
+bunx nx show project shell
 
 # Generate a new Angular app
-npx nx g @nx/angular:app my-new-app
+bunx nx g @nx/angular:app my-new-app
 
 # Generate a new shared library
-npx nx g @nx/angular:lib libs/shared/my-lib
+bunx nx g @nx/angular:lib libs/shared/my-lib
 
 # Generate the PrimeNG theme
 bun run build:theme

@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start": "nx run-many --target=serve --all --parallel=4",
+    "dev": "nx run-many --target=serve --all --parallel=4",
     "build:theme": "bun tools/generate-primeng-theme.mjs"
   },
   "private": true,
